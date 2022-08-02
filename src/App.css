@@ -1,0 +1,382 @@
+.App{
+  width: 100%;
+  height: 95%;
+  text-align: center;
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
+  flex-direction: column;
+}
+
+#root{
+  width: 100%;
+  height: 100vh;
+}
+
+.boards-container{
+  width: 94%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.board{
+  background-color: #705a40;
+  width: 94%;
+  max-width: 543px;
+  aspect-ratio: 1;
+  margin: 10px 0 10px 0;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 9px;
+  gap: 10px;
+}
+
+.number-square{
+  background-color: rgb(80, 103, 138);
+  flex-basis: 23%;
+  border-radius: 10px;
+  aspect-ratio: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 44px;
+}
+
+.color-one{
+  background-color: rgb(80, 103, 138);
+}
+
+.color-two{
+  background-color: rgb(80, 138, 128);
+}
+
+.color-three{
+  background-color: rgb(80, 138, 104);
+}
+
+.color-four{
+  background-color: rgb(87, 138, 80);
+}
+
+.color-five{
+  background-color: rgb(113, 138, 80);
+}
+
+.color-six{
+  background-color: rgb(138, 134, 80);
+}
+
+.color-seven{
+  background-color: rgb(160, 123, 76);
+}
+
+.color-eight{
+  background-color: rgb(160, 86, 76);
+}
+
+.color-nine{
+  background-color: rgb(160, 76, 125);
+}
+
+.color-ten{
+  background-color: rgb(140, 76, 160);
+}
+
+.color-eleven{
+  background-color: rgb(156, 136, 212);
+}
+
+.plain-square{
+  background-color: rgb(165, 130, 98);
+  flex-basis: 23%;
+  border-radius: 10px;
+  aspect-ratio: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 44px;
+}
+
+.visible{
+  display: flex;
+}
+
+.invisible{
+  display: none;
+}
+
+.blank{
+  background-color: transparent;
+  position: absolute;
+}
+
+.button-wrapper{
+  min-width: 255px;
+}
+
+.main-button{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+	margin:auto;
+	font-size: 20px;
+  width: 15px;
+  height: 15px;
+	background-color: #383838;
+	text-decoration: none;
+  padding: 8%;
+  margin: 5px;
+	border: 1px solid rgb(255, 255, 255);
+}
+
+.main-button:hover{
+	background-color: #7c7c7c;
+  cursor: pointer;
+}
+
+.fade-in{
+  animation-duration: 0.8s;
+  transition-timing-function:ease-in-out;
+  animation-fill-mode: both;
+  animation-name: fadeIn;
+}
+
+.move-up-one{
+  animation-duration: 0.4s;
+  transition-timing-function:ease-in-out;
+  animation-fill-mode: both;
+  animation-name: moveUpOne;
+}
+
+.move-up-two{
+  animation-duration: 0.4s;
+  transition-timing-function:ease-in-out;
+  animation-fill-mode: both;
+  animation-name: moveUpTwo;
+}
+
+.move-up-three{
+  animation-duration: 0.4s;
+  transition-timing-function:ease-in-out;
+  animation-fill-mode: both;
+  animation-name: moveUpThree;
+}
+
+.move-down-one{
+  animation-duration: 0.4s;
+  transition-timing-function:ease-in-out;
+  animation-fill-mode: both;
+  animation-name: moveDownOne;
+}
+
+.move-down-two{
+  animation-duration: 0.4s;
+  transition-timing-function:ease-in-out;
+  animation-fill-mode: both;
+  animation-name: moveDownTwo;
+}
+
+.move-down-three{
+  animation-duration: 0.4s;
+  transition-timing-function:ease-in-out;
+  animation-fill-mode: both;
+  animation-name: moveDownThree;
+}
+
+.move-left-one{
+  animation-duration: 0.4s;
+  transition-timing-function:ease-in-out;
+  animation-fill-mode: both;
+  animation-name: moveLeftOne;
+}
+
+.move-left-two{
+  animation-duration: 0.4s;
+  transition-timing-function:ease-in-out;
+  animation-fill-mode: both;
+  animation-name: moveLeftTwo;
+}
+
+.move-left-three{
+  animation-duration: 0.4s;
+  transition-timing-function:ease-in-out;
+  animation-fill-mode: both;
+  animation-name: moveLeftThree;
+}
+
+.move-right-one{
+  animation-duration: 0.4s;
+  transition-timing-function:ease-in-out;
+  animation-fill-mode: both;
+  animation-name: moveRightOne;
+}
+
+.move-right-two{
+  animation-duration: 0.4s;
+  transition-timing-function:ease-in-out;
+  animation-fill-mode: both;
+  animation-name: moveRightTwo;
+}
+
+.move-right-three{
+  animation-duration: 0.4s;
+  transition-timing-function:ease-in-out;
+  animation-fill-mode: both;
+  animation-name: moveRightThree;
+}
+
+
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  
+  100% {
+    opacity: 1;
+  }
+ }
+
+ @keyframes moveUpOne {
+  0% {
+    transform: translateY(0%);
+  }
+  
+  100% {
+    transform: translateY(-110.5%);
+  }
+ }
+
+ @keyframes moveUpTwo {
+  0% {
+    transform: translateY(0%);
+  }
+  
+  100% {
+    transform: translateY(-221%);
+  }
+ }
+
+ @keyframes moveUpThree {
+  0% {
+    transform: translateY(0%);
+  }
+  
+  100% {
+    transform: translateY(-331.5%);
+  }
+ }
+
+ @keyframes moveDownOne {
+  0% {
+    transform: translateY(0%);
+  }
+  
+  100% {
+    transform: translateY(110.5%);
+  }
+ }
+
+ @keyframes moveDownTwo {
+  0% {
+    transform: translateY(0%);
+  }
+  
+  100% {
+    transform: translateY(221%);
+  }
+ }
+
+ @keyframes moveDownThree {
+  0% {
+    transform: translateY(0%);
+  }
+  
+  100% {
+    transform: translateY(331.5%);
+  }
+ }
+
+ @keyframes moveLeftOne {
+  0% {
+    transform: translateX(0%);
+  }
+  
+  100% {
+    transform: translateX(-108%);
+  }
+ }
+
+ @keyframes moveLeftTwo {
+  0% {
+    transform: translateX(0%);
+  }
+  
+  100% {
+    transform: translateX(-216%);
+  }
+ }
+
+ @keyframes moveLeftThree {
+  0% {
+    transform: translateX(0%);
+  }
+  
+  100% {
+    transform: translateX(-324%);
+  }
+ }
+
+ @keyframes moveRightOne {
+  0% {
+    transform: translateX(0%);
+  }
+  
+  100% {
+    transform: translateX(108%);
+  }
+ }
+
+ @keyframes moveRightTwo {
+  0% {
+    transform: translateX(0%);
+  }
+  
+  100% {
+    transform: translateX(216%);
+  }
+ }
+
+ @keyframes moveRightThree {
+  0% {
+    transform: translateX(0%);
+  }
+  
+  100% {
+    transform: translateX(324%);
+  }
+ }
+ 
+
+
+
+
+ @media only screen and (max-width: 550px) {
+ 
+  .board{
+    padding: 5px;
+    gap: 5px;
+  }
+  
+  .number-square{
+    flex-basis: 23%;
+    font-size: 23px;
+  }
+
+ }

@@ -1,6 +1,6 @@
 
 
-A live demo of this app can be found here: [https://rc-wordle-clone.herokuapp.com/](https://remake-2048-clone.herokuapp.com/)
+A live demo of this app can be found here: https://remake-2048-clone.herokuapp.com/
 
 NOTE: Initial loading time is due to heroku's free version, where if noone has accessed the site in a bit, they disable it. Please wait a few seconds for it to load.
 

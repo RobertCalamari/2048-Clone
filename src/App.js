@@ -1,13 +1,17 @@
 import './App.css';
 import { useEffect, useState } from 'react';
 import NumberSquare from './components/NumberSquare';
+import { useIsMount } from './components/useIsMount';
 
 function App() {
 
   const [squares, setSquares] = useState([]);
+  const [clickedKey, setClickedKey] = useState(false);
+  const [waitClick, setWaitClick] = useState(false);
   const [newNumber, setNewNumber] = useState(20);
   const [squaresNotUsed, setSquaresNotUsed] = useState([]);
   const [squaresMovement, setSquaresMovement] = useState([]);
+  const isMount = useIsMount(); 
 
   useEffect(() => {
 
@@ -30,141 +34,72 @@ function App() {
 
     setSquares(begArr);
     setSquaresNotUsed(usedArr);
-    document.addEventListener('keydown', detectKeyDown, true);
+
+    document.addEventListener('keydown', detectKeyDown2, true);
+    
   }, []);
 
-  const detectKeyDown = (e) => {
+  const detectKeyDown2 = (e) => {
+    setClickedKey(e.key);
     if(["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.code) > -1) {
-        e.preventDefault();
+      e.preventDefault();
     }
-    console.log(squares);
-    if(e.key === "ArrowUp"){
-      moveUp();
-    }else if(e.key === "ArrowDown"){
-      moveDown();
-    }else if(e.key === "ArrowLeft"){
-      moveLeft();
-    }else if(e.key === "ArrowRight"){
-      moveRight();
-    }
-    // console.log("Clicked Key: ", e.key);
   }
 
   useEffect(() => {
-  }, [squares]);
+    if (isMount) {
+    } else {
+      console.log("Clicked Key: ", clickedKey);  
+      
+      // console.log(squares);    
+      console.log('hello you are down', clickedKey, squares);
 
-  useEffect(() => {
-      console.log(squaresMovement);
-  }, [squaresMovement]);
+      if(clickedKey === "ArrowUp"){
+        moveUp();
+      }else if(clickedKey === "ArrowDown"){
+        moveDown();
+      }else if(clickedKey === "ArrowLeft"){
+        moveLeft();
+      }else if(clickedKey === "ArrowRight"){
+        moveRight();
+      }
+      setClickedKey(false);
+    }
+      
+  }, [clickedKey]);
+
+
+  const detectKeyDown = (e) => {
+    
+    // console.log("Clicked Key: ", e.key);
+  }
 
   function moveUp(){
-    console.log('moved up-------------------------------------------------------------------------------------------------------');
-    
-    let temparr = [];
-    let tempUsedArr = [];
-    setSquaresMovement([['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],]);
-    let tempSquareMovArr = [];
+    if(waitClick === false){
+      console.log('moved up-------------------------------------------------------------------------------------------------------');
+      
+      let temparr = [];
+      let tempUsedArr = [];
+      setSquaresMovement([['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],]);
+      let tempSquareMovArr = [];
 
-    for(let i in squaresMovement){
-      tempSquareMovArr[i] = squaresMovement[i];
-    }
-    for(let i in squares){
-      temparr[i] = [squares[i],0];
-    }
-    for(let i in squaresNotUsed){
-      tempUsedArr[i] = squaresNotUsed[i];
-    }
-    let cont =  false;
-    for(let i in temparr){
-      if(temparr[i][0] === 0){
-      }else{
-        if((i-4)<0){
+      for(let i in squaresMovement){
+        tempSquareMovArr[i] = squaresMovement[i];
+      }
+      for(let i in squares){
+        temparr[i] = [squares[i],0];
+      }
+      for(let i in squaresNotUsed){
+        tempUsedArr[i] = squaresNotUsed[i];
+      }
+      let cont =  false;
+      for(let i in temparr){
+        if(temparr[i][0] === 0){
         }else{
-          if(temparr[i-4][0] === 0){
-            if((i-8)<0){
-              temparr[i-4][0] = temparr[i][0];
-              temparr[i][0] = 0;
-              temparr[i][1] = 0;
-              cont = true;
-              tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'up', 'one');
-              let usedArr = removeFromArray(squaresNotUsed, i-4);
-              usedArr.push(parseInt(i));
-              setSquaresNotUsed(usedArr);
-            }else{
-              if(temparr[i-8][0] === 0){
-                if((i-12)<0){
-                  temparr[i-8][0] = temparr[i][0];
-                  temparr[i][0] = 0;
-                  temparr[i][1] = 0;
-                  tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'up', 'two');
-                  cont = true;
-                  let usedArr = removeFromArray(squaresNotUsed, i-8);
-                  usedArr.push(parseInt(i));
-                  setSquaresNotUsed(usedArr);
-                }else{
-                  if(temparr[i-12][0] === 0){
-                    temparr[i-12][0] = temparr[i][0];
-                    temparr[i][0] = 0;
-                    temparr[i][1] = 0;
-                    cont = true;
-                    tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'up', 'three');
-                    let usedArr = removeFromArray(squaresNotUsed, i-12);
-                    usedArr.push(parseInt(i));
-                    setSquaresNotUsed(usedArr);
-                  }else if(temparr[i-12][0] === temparr[i][0]){
-                    if(temparr[i-12][1] === 1){
-                      temparr[i-8][0] = temparr[i][0];
-                      temparr[i][0] = 0;
-                      temparr[i][1] = 0;
-                      tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'up', 'two');
-                      cont = true;
-                      let usedArr = removeFromArray(squaresNotUsed, i-8);
-                      usedArr.push(parseInt(i));
-                      setSquaresNotUsed(usedArr);
-                    }else{
-                      temparr[i-12][0] = temparr[i][0]+temparr[i][0];
-                      temparr[i][0] = 0;
-                      temparr[i][1] = 0;
-                      temparr[i-12][1] = 1;
-                      tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'up', 'three');
-                      cont = true;
-                      let usedArr = squaresNotUsed;
-                      usedArr.push(parseInt(i));
-                      setSquaresNotUsed(usedArr);
-                    }
-                  }else{
-                    temparr[i-8][0] = temparr[i][0];
-                    temparr[i][0] = 0;
-                    temparr[i][1] = 0;
-                    cont = true;
-                    tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'up', 'two');
-                    let usedArr = removeFromArray(squaresNotUsed, i-8);
-                    usedArr.push(parseInt(i));
-                    setSquaresNotUsed(usedArr);
-                  }
-                }
-              }else if(temparr[i-8][0] === temparr[i][0]){
-                if(temparr[i-8][1] === 1){
-                  temparr[i-4][0] = temparr[i][0];
-                  temparr[i][0] = 0;
-                  temparr[i][1] = 0;
-                  tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'up', 'two');
-                  cont = true;
-                  let usedArr = removeFromArray(squaresNotUsed, i-4);
-                  usedArr.push(parseInt(i));
-                  setSquaresNotUsed(usedArr);
-                }else{
-                  temparr[i-8][0] = temparr[i][0]+temparr[i][0];
-                  temparr[i][0] = 0;
-                  temparr[i][1] = 0;
-                  temparr[i-8][1] = 1;
-                  cont = true;
-                  tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'up', 'two');
-                  let usedArr = squaresNotUsed;
-                  usedArr.push(parseInt(i));
-                  setSquaresNotUsed(usedArr);
-                }
-              }else{
+          if((i-4)<0){
+          }else{
+            if(temparr[i-4][0] === 0){
+              if((i-8)<0){
                 temparr[i-4][0] = temparr[i][0];
                 temparr[i][0] = 0;
                 temparr[i][1] = 0;
@@ -173,146 +108,153 @@ function App() {
                 let usedArr = removeFromArray(squaresNotUsed, i-4);
                 usedArr.push(parseInt(i));
                 setSquaresNotUsed(usedArr);
-              }
-            }
-          }else if(temparr[i-4][0] === temparr[i][0]){
-            if(temparr[i-4][1] === 1){
-            }else{
-              temparr[i-4][0] = temparr[i][0]+temparr[i][0];
-              temparr[i][0] = 0;
-              temparr[i][1] = 0;
-              temparr[i-4][1] = 1;
-              tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'up', 'one');
-              cont = true;
-              let usedArr = removeFromArray(squaresNotUsed, i-4);
-              usedArr.push(parseInt(i));
-              setSquaresNotUsed(usedArr);
-            }
-          }else{
-          }
-        }
-      }
-    }
-
-    if(cont === false){
-      setSquaresNotUsed(tempUsedArr);
-      if(squaresNotUsed.length === 0){
-        gameOver();
-      }
-    }else{
-      moveSquares(tempSquareMovArr, temparr);
-    } 
-  }
-
-  function moveRight(){
-    console.log('moved right-------------------------------------------------------------------------------------------------------');
-    
-    let temparr = [];
-    let tempUsedArr = [];    
-    setSquaresMovement([['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],]);
-    let tempSquareMovArr = [];
-
-    for(let i in squaresMovement){
-      tempSquareMovArr[i] = squaresMovement[i];
-    }
-    for(let i in squares){
-      temparr[i] = [squares[i],0];
-    }
-    for(let i in squaresNotUsed){
-      tempUsedArr[i] = squaresNotUsed[i];
-    }
-    let cont =  false;
-    for(let i in temparr){
-      i = temparr.length-i-1;
-      if(temparr[i][0] === 0){
-      }else{
-        if( ((i>=0 && i<=3) && (i+1)>3) || ((i>=4 && i<=7) && (i+1)>7) || ((i>=8 && i<=11) && (i+1)>11)  || ((i>=12 && i<=15) && (i+1)>15)){
-        }else{
-          if(temparr[i+1][0] === 0){
-            if( ((i>=0 && i<=3) && (i+2)>3) || ((i>=4 && i<=7) && (i+2)>7) || ((i>=8 && i<=11) && (i+2)>11)  || ((i>=12 && i<=15) && (i+2)>15)){
-              temparr[i+1][0] = temparr[i][0];
-              temparr[i][0] = 0;
-              temparr[i][1] = 0;
-              cont = true;
-              tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'right', 'one');
-              let usedArr = removeFromArray(squaresNotUsed, i+1);
-              usedArr.push(parseInt(i));
-              setSquaresNotUsed(usedArr);
-            }else{
-              if(temparr[i+2][0] === 0){
-                if( ((i>=0 && i<=3) && (i+3)>3) || ((i>=4 && i<=7) && (i+3)>7) || ((i>=8 && i<=11) && (i+3)>11)  || ((i>=12 && i<=15) && (i+3)>15)){
-                  temparr[i+2][0] = temparr[i][0];
-                  temparr[i][0] = 0;
-                  temparr[i][1] = 0;
-                  cont = true;
-                  tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'right', 'two');
-                  let usedArr = removeFromArray(squaresNotUsed, i+2);
-                  usedArr.push(parseInt(i));
-                  setSquaresNotUsed(usedArr);
-                }else{
-                  if(temparr[i+3][0] === 0){
-                    temparr[i+3][0] = temparr[i][0];
+              }else{
+                if(temparr[i-8][0] === 0){
+                  if((i-12)<0){
+                    temparr[i-8][0] = temparr[i][0];
                     temparr[i][0] = 0;
                     temparr[i][1] = 0;
+                    tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'up', 'two');
                     cont = true;
-                    tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'right', 'three');
-                    let usedArr = removeFromArray(squaresNotUsed, i+3);
+                    let usedArr = removeFromArray(squaresNotUsed, i-8);
                     usedArr.push(parseInt(i));
                     setSquaresNotUsed(usedArr);
-                  }else if(temparr[i+3][0] === temparr[i][0]){
-                    if(temparr[i+3][1] === 1){
-                      temparr[i+2][0] = temparr[i][0];
+                  }else{
+                    if(temparr[i-12][0] === 0){
+                      temparr[i-12][0] = temparr[i][0];
                       temparr[i][0] = 0;
                       temparr[i][1] = 0;
                       cont = true;
-                      tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'right', 'two');
-                      let usedArr = removeFromArray(squaresNotUsed, i+2);
+                      tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'up', 'three');
+                      let usedArr = removeFromArray(squaresNotUsed, i-12);
                       usedArr.push(parseInt(i));
                       setSquaresNotUsed(usedArr);
+                    }else if(temparr[i-12][0] === temparr[i][0]){
+                      if(temparr[i-12][1] === 1){
+                        temparr[i-8][0] = temparr[i][0];
+                        temparr[i][0] = 0;
+                        temparr[i][1] = 0;
+                        tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'up', 'two');
+                        cont = true;
+                        let usedArr = removeFromArray(squaresNotUsed, i-8);
+                        usedArr.push(parseInt(i));
+                        setSquaresNotUsed(usedArr);
+                      }else{
+                        temparr[i-12][0] = temparr[i][0]+temparr[i][0];
+                        temparr[i][0] = 0;
+                        temparr[i][1] = 0;
+                        temparr[i-12][1] = 1;
+                        tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'up', 'three');
+                        cont = true;
+                        let usedArr = squaresNotUsed;
+                        usedArr.push(parseInt(i));
+                        setSquaresNotUsed(usedArr);
+                      }
                     }else{
-                      temparr[i+3][0] = temparr[i][0]+temparr[i][0];
+                      temparr[i-8][0] = temparr[i][0];
                       temparr[i][0] = 0;
                       temparr[i][1] = 0;
-                      temparr[i+3][1] = 1;
                       cont = true;
-                      tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'right', 'three');
-                      let usedArr = squaresNotUsed;
+                      tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'up', 'two');
+                      let usedArr = removeFromArray(squaresNotUsed, i-8);
                       usedArr.push(parseInt(i));
                       setSquaresNotUsed(usedArr);
                     }
-                  }else{
-                    temparr[i+2][0] = temparr[i][0];
+                  }
+                }else if(temparr[i-8][0] === temparr[i][0]){
+                  if(temparr[i-8][1] === 1){
+                    temparr[i-4][0] = temparr[i][0];
                     temparr[i][0] = 0;
                     temparr[i][1] = 0;
+                    tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'up', 'two');
                     cont = true;
-                    tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'right', 'two');
-                    let usedArr = removeFromArray(squaresNotUsed, i+2);
+                    let usedArr = removeFromArray(squaresNotUsed, i-4);
+                    usedArr.push(parseInt(i));
+                    setSquaresNotUsed(usedArr);
+                  }else{
+                    temparr[i-8][0] = temparr[i][0]+temparr[i][0];
+                    temparr[i][0] = 0;
+                    temparr[i][1] = 0;
+                    temparr[i-8][1] = 1;
+                    cont = true;
+                    tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'up', 'two');
+                    let usedArr = squaresNotUsed;
                     usedArr.push(parseInt(i));
                     setSquaresNotUsed(usedArr);
                   }
-                }
-              }else if(temparr[i+2][0] === temparr[i][0]){
-                if(temparr[i+2][1] === 1){
-                  temparr[i+1][0] = temparr[i][0];
-                  temparr[i][0] = 0;
-                  temparr[i][1] = 0;
-                  cont = true;
-                  tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'right', 'one');
-                  let usedArr = removeFromArray(squaresNotUsed, i+1);
-                  usedArr.push(parseInt(i));
-                  setSquaresNotUsed(usedArr);
                 }else{
-                  temparr[i+2][0] = temparr[i][0]+temparr[i][0];
+                  temparr[i-4][0] = temparr[i][0];
                   temparr[i][0] = 0;
                   temparr[i][1] = 0;
-                  temparr[i+2][1] = 1;
-                  tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'right', 'two');
                   cont = true;
-                  let usedArr = squaresNotUsed;
+                  tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'up', 'one');
+                  let usedArr = removeFromArray(squaresNotUsed, i-4);
                   usedArr.push(parseInt(i));
                   setSquaresNotUsed(usedArr);
                 }
+              }
+            }else if(temparr[i-4][0] === temparr[i][0]){
+              if(temparr[i-4][1] === 1){
               }else{
+                temparr[i-4][0] = temparr[i][0]+temparr[i][0];
+                temparr[i][0] = 0;
+                temparr[i][1] = 0;
+                temparr[i-4][1] = 1;
+                tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'up', 'one');
+                cont = true;
+                let usedArr = removeFromArray(squaresNotUsed, i-4);
+                usedArr.push(parseInt(i));
+                setSquaresNotUsed(usedArr);
+              }
+            }else{
+            }
+          }
+        }
+      }
+
+      if(cont === false){
+        setSquaresNotUsed(tempUsedArr);
+        if(squaresNotUsed.length === 0){
+          gameOver();
+        }
+      }else{
+        moveSquares(tempSquareMovArr, temparr);
+      }
+
+    } else{
+
+    }
+  }
+
+  function moveRight(){
+    if(waitClick === false){
+
+    
+      console.log('moved right-------------------------------------------------------------------------------------------------------');
+      
+      let temparr = [];
+      let tempUsedArr = [];    
+      setSquaresMovement([['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],]);
+      let tempSquareMovArr = [];
+
+      for(let i in squaresMovement){
+        tempSquareMovArr[i] = squaresMovement[i];
+      }
+      for(let i in squares){
+        temparr[i] = [squares[i],0];
+      }
+      for(let i in squaresNotUsed){
+        tempUsedArr[i] = squaresNotUsed[i];
+      }
+      let cont =  false;
+      for(let i in temparr){
+        i = temparr.length-i-1;
+        if(temparr[i][0] === 0){
+        }else{
+          if( ((i>=0 && i<=3) && (i+1)>3) || ((i>=4 && i<=7) && (i+1)>7) || ((i>=8 && i<=11) && (i+1)>11)  || ((i>=12 && i<=15) && (i+1)>15)){
+          }else{
+            if(temparr[i+1][0] === 0){
+              if( ((i>=0 && i<=3) && (i+2)>3) || ((i>=4 && i<=7) && (i+2)>7) || ((i>=8 && i<=11) && (i+2)>11)  || ((i>=12 && i<=15) && (i+2)>15)){
                 temparr[i+1][0] = temparr[i][0];
                 temparr[i][0] = 0;
                 temparr[i][1] = 0;
@@ -321,146 +263,151 @@ function App() {
                 let usedArr = removeFromArray(squaresNotUsed, i+1);
                 usedArr.push(parseInt(i));
                 setSquaresNotUsed(usedArr);
-              }
-            }
-          }else if(temparr[i+1][0] === temparr[i][0]){
-            if(temparr[i+1][1] === 1){
-            }else{
-              temparr[i+1][0] = temparr[i][0]+temparr[i][0];
-              temparr[i][0] = 0;
-              temparr[i][1] = 0;
-              temparr[i+1][1] = 1;
-              cont = true;
-              tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'right', 'one');
-              let usedArr = removeFromArray(squaresNotUsed, i+1);
-              usedArr.push(parseInt(i));
-              setSquaresNotUsed(usedArr);
-            }
-          }else{
-          }
-        }
-      }
-    }
-
-    if(cont === false){
-      setSquaresNotUsed(tempUsedArr);
-      if(squaresNotUsed.length === 0){
-        gameOver();
-      }
-    }else{
-      moveSquares(tempSquareMovArr, temparr);
-    } 
-  }
-
-  function moveDown(){
-    console.log('moved down-------------------------------------------------------------------------------------------------------');
-    
-    let temparr = [];
-    let tempUsedArr = [];
-    let cont =  false;    
-    setSquaresMovement([['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],]);
-    let tempSquareMovArr = [];
-
-    for(let i in squaresMovement){
-      tempSquareMovArr[i] = squaresMovement[i];
-    }
-    for(let i in squares){
-      temparr[i] = [squares[i],0];
-    }
-    for(let i in squaresNotUsed){
-      tempUsedArr[i] = squaresNotUsed[i];
-    }
-    for(let i in temparr){
-      i = temparr.length-i-1;
-      if(temparr[i][0] === 0){
-      }else{
-        if((i+4)>15){
-        }else{
-          if(temparr[i+4][0] === 0){
-            if((i+8)>15){
-              temparr[i+4][0] = temparr[i][0];
-              temparr[i][0] = 0;
-              temparr[i][1] = 0;
-              cont = true;
-              tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'down', 'one');
-              let usedArr = removeFromArray(squaresNotUsed, i+4);
-              usedArr.push(parseInt(i));
-              setSquaresNotUsed(usedArr);
-            }else{
-              if(temparr[i+8][0] === 0){
-                if((i+12)>15){
-                  temparr[i+8][0] = temparr[i][0];
-                  temparr[i][0] = 0;
-                  temparr[i][1] = 0;
-                  cont = true;
-                  tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'down', 'two');
-                  let usedArr = removeFromArray(squaresNotUsed, i+8);
-                  usedArr.push(parseInt(i));
-                  setSquaresNotUsed(usedArr);
-                }else{
-                  if(temparr[i+12][0] === 0){
-                    temparr[i+12][0] = temparr[i][0];
+              }else{
+                if(temparr[i+2][0] === 0){
+                  if( ((i>=0 && i<=3) && (i+3)>3) || ((i>=4 && i<=7) && (i+3)>7) || ((i>=8 && i<=11) && (i+3)>11)  || ((i>=12 && i<=15) && (i+3)>15)){
+                    temparr[i+2][0] = temparr[i][0];
                     temparr[i][0] = 0;
                     temparr[i][1] = 0;
                     cont = true;
-                    tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'down', 'three');
-                    let usedArr = removeFromArray(squaresNotUsed, i+12);
+                    tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'right', 'two');
+                    let usedArr = removeFromArray(squaresNotUsed, i+2);
                     usedArr.push(parseInt(i));
                     setSquaresNotUsed(usedArr);
-                  }else if(temparr[i+12][0] === temparr[i][0]){
-                    if(temparr[i+12][1] === 1){
-                      temparr[i+8][0] = temparr[i][0];
+                  }else{
+                    if(temparr[i+3][0] === 0){
+                      temparr[i+3][0] = temparr[i][0];
                       temparr[i][0] = 0;
                       temparr[i][1] = 0;
                       cont = true;
-                      tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'down', 'two');
-                      let usedArr = removeFromArray(squaresNotUsed, i+8);
+                      tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'right', 'three');
+                      let usedArr = removeFromArray(squaresNotUsed, i+3);
                       usedArr.push(parseInt(i));
                       setSquaresNotUsed(usedArr);
+                    }else if(temparr[i+3][0] === temparr[i][0]){
+                      if(temparr[i+3][1] === 1){
+                        temparr[i+2][0] = temparr[i][0];
+                        temparr[i][0] = 0;
+                        temparr[i][1] = 0;
+                        cont = true;
+                        tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'right', 'two');
+                        let usedArr = removeFromArray(squaresNotUsed, i+2);
+                        usedArr.push(parseInt(i));
+                        setSquaresNotUsed(usedArr);
+                      }else{
+                        temparr[i+3][0] = temparr[i][0]+temparr[i][0];
+                        temparr[i][0] = 0;
+                        temparr[i][1] = 0;
+                        temparr[i+3][1] = 1;
+                        cont = true;
+                        tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'right', 'three');
+                        let usedArr = squaresNotUsed;
+                        usedArr.push(parseInt(i));
+                        setSquaresNotUsed(usedArr);
+                      }
                     }else{
-                      temparr[i+12][0] = temparr[i][0]+temparr[i][0];
+                      temparr[i+2][0] = temparr[i][0];
                       temparr[i][0] = 0;
                       temparr[i][1] = 0;
-                      temparr[i+12][1] = 1;
                       cont = true;
-                      tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'down', 'three');
-                      let usedArr = squaresNotUsed;
+                      tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'right', 'two');
+                      let usedArr = removeFromArray(squaresNotUsed, i+2);
                       usedArr.push(parseInt(i));
                       setSquaresNotUsed(usedArr);
                     }
-                  }else{
-                    temparr[i+8][0] = temparr[i][0];
+                  }
+                }else if(temparr[i+2][0] === temparr[i][0]){
+                  if(temparr[i+2][1] === 1){
+                    temparr[i+1][0] = temparr[i][0];
                     temparr[i][0] = 0;
                     temparr[i][1] = 0;
                     cont = true;
-                    tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'down', 'two');
-                    let usedArr = removeFromArray(squaresNotUsed, i+8);
+                    tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'right', 'one');
+                    let usedArr = removeFromArray(squaresNotUsed, i+1);
+                    usedArr.push(parseInt(i));
+                    setSquaresNotUsed(usedArr);
+                  }else{
+                    temparr[i+2][0] = temparr[i][0]+temparr[i][0];
+                    temparr[i][0] = 0;
+                    temparr[i][1] = 0;
+                    temparr[i+2][1] = 1;
+                    tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'right', 'two');
+                    cont = true;
+                    let usedArr = squaresNotUsed;
                     usedArr.push(parseInt(i));
                     setSquaresNotUsed(usedArr);
                   }
-                }
-              }else if(temparr[i+8][0] === temparr[i][0]){
-                if(temparr[i+8][1] === 1){
-                  temparr[i+4][0] = temparr[i][0];
-                  temparr[i][0] = 0;
-                  temparr[i][1] = 0;
-                  cont = true;
-                  tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'down', 'one');
-                  let usedArr = removeFromArray(squaresNotUsed, i+4);
-                  usedArr.push(parseInt(i));
-                  setSquaresNotUsed(usedArr);
                 }else{
-                  temparr[i+8][0] = temparr[i][0]+temparr[i][0];
+                  temparr[i+1][0] = temparr[i][0];
                   temparr[i][0] = 0;
                   temparr[i][1] = 0;
-                  temparr[i+8][1] = 1;
                   cont = true;
-                  tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'down', 'two');
-                  let usedArr = squaresNotUsed;
+                  tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'right', 'one');
+                  let usedArr = removeFromArray(squaresNotUsed, i+1);
                   usedArr.push(parseInt(i));
                   setSquaresNotUsed(usedArr);
                 }
+              }
+            }else if(temparr[i+1][0] === temparr[i][0]){
+              if(temparr[i+1][1] === 1){
               }else{
+                temparr[i+1][0] = temparr[i][0]+temparr[i][0];
+                temparr[i][0] = 0;
+                temparr[i][1] = 0;
+                temparr[i+1][1] = 1;
+                cont = true;
+                tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'right', 'one');
+                let usedArr = removeFromArray(squaresNotUsed, i+1);
+                usedArr.push(parseInt(i));
+                setSquaresNotUsed(usedArr);
+              }
+            }else{
+            }
+          }
+        }
+      }
+
+      if(cont === false){
+        setSquaresNotUsed(tempUsedArr);
+        if(squaresNotUsed.length === 0){
+          gameOver();
+        }
+      }else{
+        moveSquares(tempSquareMovArr, temparr);
+      } 
+
+    } else{
+
+    }
+  }
+
+  function moveDown(){
+    if(waitClick === false){
+      console.log('moved down-------------------------------------------------------------------------------------------------------');
+      
+      let temparr = [];
+      let tempUsedArr = [];
+      let cont =  false;    
+      setSquaresMovement([['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],]);
+      let tempSquareMovArr = [];
+
+      for(let i in squaresMovement){
+        tempSquareMovArr[i] = squaresMovement[i];
+      }
+      for(let i in squares){
+        temparr[i] = [squares[i],0];
+      }
+      for(let i in squaresNotUsed){
+        tempUsedArr[i] = squaresNotUsed[i];
+      }
+      for(let i in temparr){
+        i = temparr.length-i-1;
+        if(temparr[i][0] === 0){
+        }else{
+          if((i+4)>15){
+          }else{
+            if(temparr[i+4][0] === 0){
+              if((i+8)>15){
                 temparr[i+4][0] = temparr[i][0];
                 temparr[i][0] = 0;
                 temparr[i][1] = 0;
@@ -469,145 +416,150 @@ function App() {
                 let usedArr = removeFromArray(squaresNotUsed, i+4);
                 usedArr.push(parseInt(i));
                 setSquaresNotUsed(usedArr);
-              }
-            }
-          }else if(temparr[i+4][0] === temparr[i][0]){
-            if(temparr[i+4][1] === 1){
-            }else{
-              temparr[i+4][0] = temparr[i][0]+temparr[i][0];
-              temparr[i][0] = 0;
-              temparr[i][1] = 0;
-              temparr[i+4][1] = 1;
-              cont = true;
-              tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'down', 'one');
-              let usedArr = removeFromArray(squaresNotUsed, i+4);
-              usedArr.push(parseInt(i));
-              setSquaresNotUsed(usedArr);
-            }
-          }else{
-          }
-        }
-      }
-    }
-
-    if(cont === false){
-      setSquaresNotUsed(tempUsedArr);
-      if(squaresNotUsed.length === 0){
-        gameOver();
-      }
-    }else{
-      moveSquares(tempSquareMovArr, temparr);
-    } 
-  }
-
-  function moveLeft(){
-    console.log('moved left-------------------------------------------------------------------------------------------------------');
-    
-    let temparr = [];
-    let tempUsedArr = [];    
-    setSquaresMovement([['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],]);
-    let tempSquareMovArr = [];
-
-    for(let i in squaresMovement){
-      tempSquareMovArr[i] = squaresMovement[i];
-    }
-    for(let i in squares){
-      temparr[i] = [squares[i],0];
-    }
-    for(let i in squaresNotUsed){
-      tempUsedArr[i] = squaresNotUsed[i];
-    }
-    let cont =  false;
-    for(let i in temparr){
-      if(temparr[i][0] === 0){
-      }else{
-        if( ((i>=0 && i<=3) && (i-1)<0) || ((i>=4 && i<=7) && (i-1)<4) || ((i>=8 && i<=11) && (i-1)<8)  || ((i>=12 && i<=15) && (i-1)<12)){
-        }else{
-          if(temparr[i-1][0] === 0){
-            if( ((i>=0 && i<=3) && (i-2)<0) || ((i>=4 && i<=7) && (i-2)<4) || ((i>=8 && i<=11) && (i-2)<8)  || ((i>=12 && i<=15) && (i-2)<12)){
-              temparr[i-1][0] = temparr[i][0];
-              temparr[i][0] = 0;
-              temparr[i][1] = 0;
-              cont = true;
-              tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'left', 'one');
-              let usedArr = removeFromArray(squaresNotUsed, i-1);
-              usedArr.push(parseInt(i));
-              setSquaresNotUsed(usedArr);
-            }else{
-              if(temparr[i-2][0] === 0){
-                if( ((i>=0 && i<=3) && (i-3)<0) || ((i>=4 && i<=7) && (i-3)<4) || ((i>=8 && i<=11) && (i-3)<8)  || ((i>=12 && i<=15) && (i-3)<12)){
-                  temparr[i-2][0] = temparr[i][0];
-                  temparr[i][0] = 0;
-                  temparr[i][1] = 0;
-                  cont = true;
-                  tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'left', 'two');
-                  let usedArr = removeFromArray(squaresNotUsed, i-2);
-                  usedArr.push(parseInt(i));
-                  setSquaresNotUsed(usedArr);
-                }else{
-                  if(temparr[i-3][0] === 0){
-                    temparr[i-3][0] = temparr[i][0];
+              }else{
+                if(temparr[i+8][0] === 0){
+                  if((i+12)>15){
+                    temparr[i+8][0] = temparr[i][0];
                     temparr[i][0] = 0;
                     temparr[i][1] = 0;
                     cont = true;
-                    tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'left', 'three');
-                    let usedArr = removeFromArray(squaresNotUsed, i-3);
+                    tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'down', 'two');
+                    let usedArr = removeFromArray(squaresNotUsed, i+8);
                     usedArr.push(parseInt(i));
                     setSquaresNotUsed(usedArr);
-                  }else if(temparr[i-3][0] === temparr[i][0]){
-                    if(temparr[i-3][1] === 1){
-                      temparr[i-2][0] = temparr[i][0];
+                  }else{
+                    if(temparr[i+12][0] === 0){
+                      temparr[i+12][0] = temparr[i][0];
                       temparr[i][0] = 0;
                       temparr[i][1] = 0;
                       cont = true;
-                      tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'left', 'two');
-                      let usedArr = removeFromArray(squaresNotUsed, i-2);
+                      tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'down', 'three');
+                      let usedArr = removeFromArray(squaresNotUsed, i+12);
                       usedArr.push(parseInt(i));
                       setSquaresNotUsed(usedArr);
+                    }else if(temparr[i+12][0] === temparr[i][0]){
+                      if(temparr[i+12][1] === 1){
+                        temparr[i+8][0] = temparr[i][0];
+                        temparr[i][0] = 0;
+                        temparr[i][1] = 0;
+                        cont = true;
+                        tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'down', 'two');
+                        let usedArr = removeFromArray(squaresNotUsed, i+8);
+                        usedArr.push(parseInt(i));
+                        setSquaresNotUsed(usedArr);
+                      }else{
+                        temparr[i+12][0] = temparr[i][0]+temparr[i][0];
+                        temparr[i][0] = 0;
+                        temparr[i][1] = 0;
+                        temparr[i+12][1] = 1;
+                        cont = true;
+                        tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'down', 'three');
+                        let usedArr = squaresNotUsed;
+                        usedArr.push(parseInt(i));
+                        setSquaresNotUsed(usedArr);
+                      }
                     }else{
-                      temparr[i-3][0] = temparr[i][0]+temparr[i][0];
+                      temparr[i+8][0] = temparr[i][0];
                       temparr[i][0] = 0;
                       temparr[i][1] = 0;
-                      temparr[i-3][1] = 1;
                       cont = true;
-                      tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'left', 'three');
-                      let usedArr = squaresNotUsed;
+                      tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'down', 'two');
+                      let usedArr = removeFromArray(squaresNotUsed, i+8);
                       usedArr.push(parseInt(i));
                       setSquaresNotUsed(usedArr);
                     }
-                  }else{
-                    temparr[i-2][0] = temparr[i][0];
+                  }
+                }else if(temparr[i+8][0] === temparr[i][0]){
+                  if(temparr[i+8][1] === 1){
+                    temparr[i+4][0] = temparr[i][0];
                     temparr[i][0] = 0;
                     temparr[i][1] = 0;
                     cont = true;
-                    tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'left', 'two');
-                    let usedArr = removeFromArray(squaresNotUsed, i-2);
+                    tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'down', 'one');
+                    let usedArr = removeFromArray(squaresNotUsed, i+4);
+                    usedArr.push(parseInt(i));
+                    setSquaresNotUsed(usedArr);
+                  }else{
+                    temparr[i+8][0] = temparr[i][0]+temparr[i][0];
+                    temparr[i][0] = 0;
+                    temparr[i][1] = 0;
+                    temparr[i+8][1] = 1;
+                    cont = true;
+                    tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'down', 'two');
+                    let usedArr = squaresNotUsed;
                     usedArr.push(parseInt(i));
                     setSquaresNotUsed(usedArr);
                   }
-                }
-              }else if(temparr[i-2][0] === temparr[i][0]){
-                if(temparr[i-2][1] === 1){
-                  temparr[i-1][0] = temparr[i][0];
-                  temparr[i][0] = 0;
-                  temparr[i][1] = 0;
-                  cont = true;
-                  tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'left', 'one');
-                  let usedArr = removeFromArray(squaresNotUsed, i-1);
-                  usedArr.push(parseInt(i));
-                  setSquaresNotUsed(usedArr);
                 }else{
-                  temparr[i-2][0] = temparr[i][0]+temparr[i][0];
+                  temparr[i+4][0] = temparr[i][0];
                   temparr[i][0] = 0;
                   temparr[i][1] = 0;
-                  temparr[i-2][1] = 1;
                   cont = true;
-                  tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'left', 'two');
-                  let usedArr = squaresNotUsed;
+                  tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'down', 'one');
+                  let usedArr = removeFromArray(squaresNotUsed, i+4);
                   usedArr.push(parseInt(i));
                   setSquaresNotUsed(usedArr);
                 }
+              }
+            }else if(temparr[i+4][0] === temparr[i][0]){
+              if(temparr[i+4][1] === 1){
               }else{
+                temparr[i+4][0] = temparr[i][0]+temparr[i][0];
+                temparr[i][0] = 0;
+                temparr[i][1] = 0;
+                temparr[i+4][1] = 1;
+                cont = true;
+                tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'down', 'one');
+                let usedArr = removeFromArray(squaresNotUsed, i+4);
+                usedArr.push(parseInt(i));
+                setSquaresNotUsed(usedArr);
+              }
+            }else{
+            }
+          }
+        }
+      }
+
+      if(cont === false){
+        setSquaresNotUsed(tempUsedArr);
+        if(squaresNotUsed.length === 0){
+          gameOver();
+        }
+      }else{
+        moveSquares(tempSquareMovArr, temparr);
+      } 
+
+    } else{
+
+    }
+  }
+
+  function moveLeft(){
+    if(waitClick === false){
+      console.log('moved left-------------------------------------------------------------------------------------------------------');
+      
+      let temparr = [];
+      let tempUsedArr = [];    
+      setSquaresMovement([['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],]);
+      let tempSquareMovArr = [];
+
+      for(let i in squaresMovement){
+        tempSquareMovArr[i] = squaresMovement[i];
+      }
+      for(let i in squares){
+        temparr[i] = [squares[i],0];
+      }
+      for(let i in squaresNotUsed){
+        tempUsedArr[i] = squaresNotUsed[i];
+      }
+      let cont =  false;
+      for(let i in temparr){
+        if(temparr[i][0] === 0){
+        }else{
+          if( ((i>=0 && i<=3) && (i-1)<0) || ((i>=4 && i<=7) && (i-1)<4) || ((i>=8 && i<=11) && (i-1)<8)  || ((i>=12 && i<=15) && (i-1)<12)){
+          }else{
+            if(temparr[i-1][0] === 0){
+              if( ((i>=0 && i<=3) && (i-2)<0) || ((i>=4 && i<=7) && (i-2)<4) || ((i>=8 && i<=11) && (i-2)<8)  || ((i>=12 && i<=15) && (i-2)<12)){
                 temparr[i-1][0] = temparr[i][0];
                 temparr[i][0] = 0;
                 temparr[i][1] = 0;
@@ -616,35 +568,122 @@ function App() {
                 let usedArr = removeFromArray(squaresNotUsed, i-1);
                 usedArr.push(parseInt(i));
                 setSquaresNotUsed(usedArr);
+              }else{
+                if(temparr[i-2][0] === 0){
+                  if( ((i>=0 && i<=3) && (i-3)<0) || ((i>=4 && i<=7) && (i-3)<4) || ((i>=8 && i<=11) && (i-3)<8)  || ((i>=12 && i<=15) && (i-3)<12)){
+                    temparr[i-2][0] = temparr[i][0];
+                    temparr[i][0] = 0;
+                    temparr[i][1] = 0;
+                    cont = true;
+                    tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'left', 'two');
+                    let usedArr = removeFromArray(squaresNotUsed, i-2);
+                    usedArr.push(parseInt(i));
+                    setSquaresNotUsed(usedArr);
+                  }else{
+                    if(temparr[i-3][0] === 0){
+                      temparr[i-3][0] = temparr[i][0];
+                      temparr[i][0] = 0;
+                      temparr[i][1] = 0;
+                      cont = true;
+                      tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'left', 'three');
+                      let usedArr = removeFromArray(squaresNotUsed, i-3);
+                      usedArr.push(parseInt(i));
+                      setSquaresNotUsed(usedArr);
+                    }else if(temparr[i-3][0] === temparr[i][0]){
+                      if(temparr[i-3][1] === 1){
+                        temparr[i-2][0] = temparr[i][0];
+                        temparr[i][0] = 0;
+                        temparr[i][1] = 0;
+                        cont = true;
+                        tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'left', 'two');
+                        let usedArr = removeFromArray(squaresNotUsed, i-2);
+                        usedArr.push(parseInt(i));
+                        setSquaresNotUsed(usedArr);
+                      }else{
+                        temparr[i-3][0] = temparr[i][0]+temparr[i][0];
+                        temparr[i][0] = 0;
+                        temparr[i][1] = 0;
+                        temparr[i-3][1] = 1;
+                        cont = true;
+                        tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'left', 'three');
+                        let usedArr = squaresNotUsed;
+                        usedArr.push(parseInt(i));
+                        setSquaresNotUsed(usedArr);
+                      }
+                    }else{
+                      temparr[i-2][0] = temparr[i][0];
+                      temparr[i][0] = 0;
+                      temparr[i][1] = 0;
+                      cont = true;
+                      tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'left', 'two');
+                      let usedArr = removeFromArray(squaresNotUsed, i-2);
+                      usedArr.push(parseInt(i));
+                      setSquaresNotUsed(usedArr);
+                    }
+                  }
+                }else if(temparr[i-2][0] === temparr[i][0]){
+                  if(temparr[i-2][1] === 1){
+                    temparr[i-1][0] = temparr[i][0];
+                    temparr[i][0] = 0;
+                    temparr[i][1] = 0;
+                    cont = true;
+                    tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'left', 'one');
+                    let usedArr = removeFromArray(squaresNotUsed, i-1);
+                    usedArr.push(parseInt(i));
+                    setSquaresNotUsed(usedArr);
+                  }else{
+                    temparr[i-2][0] = temparr[i][0]+temparr[i][0];
+                    temparr[i][0] = 0;
+                    temparr[i][1] = 0;
+                    temparr[i-2][1] = 1;
+                    cont = true;
+                    tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'left', 'two');
+                    let usedArr = squaresNotUsed;
+                    usedArr.push(parseInt(i));
+                    setSquaresNotUsed(usedArr);
+                  }
+                }else{
+                  temparr[i-1][0] = temparr[i][0];
+                  temparr[i][0] = 0;
+                  temparr[i][1] = 0;
+                  cont = true;
+                  tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'left', 'one');
+                  let usedArr = removeFromArray(squaresNotUsed, i-1);
+                  usedArr.push(parseInt(i));
+                  setSquaresNotUsed(usedArr);
+                }
               }
-            }
-          }else if(temparr[i-1][0] === temparr[i][0]){
-            if(temparr[i-1][1] === 1){
+            }else if(temparr[i-1][0] === temparr[i][0]){
+              if(temparr[i-1][1] === 1){
+              }else{
+                temparr[i-1][0] = temparr[i][0]+temparr[i][0];
+                temparr[i][0] = 0;
+                temparr[i][1] = 0;
+                temparr[i-1][1] = 1;
+                cont = true;
+                tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'left', 'one');
+                let usedArr = removeFromArray(squaresNotUsed, i-1);
+                usedArr.push(parseInt(i));
+                setSquaresNotUsed(usedArr);
+              }
             }else{
-              temparr[i-1][0] = temparr[i][0]+temparr[i][0];
-              temparr[i][0] = 0;
-              temparr[i][1] = 0;
-              temparr[i-1][1] = 1;
-              cont = true;
-              tempSquareMovArr = setMoveArray(tempSquareMovArr, i, 'left', 'one');
-              let usedArr = removeFromArray(squaresNotUsed, i-1);
-              usedArr.push(parseInt(i));
-              setSquaresNotUsed(usedArr);
             }
-          }else{
           }
         }
       }
-    }
 
-    if(cont === false){
-      setSquaresNotUsed(tempUsedArr);
-      if(squaresNotUsed.length === 0){
-        gameOver();
-      }
-    }else{
-      moveSquares(tempSquareMovArr, temparr);
-    } 
+      if(cont === false){
+        setSquaresNotUsed(tempUsedArr);
+        if(squaresNotUsed.length === 0){
+          gameOver();
+        }
+      }else{
+        moveSquares(tempSquareMovArr, temparr);
+      } 
+
+    } else{
+
+    }
   }
 
   function gameOver(){
@@ -653,6 +692,12 @@ function App() {
 
 
   function moveSquares(tempSquareMovArr, temparr){
+    
+    setWaitClick(true);
+    setTimeout(function() {
+      setWaitClick(false);
+    }
+      , 300);  
     setSquaresMovement(tempSquareMovArr);  
     setTimeout(function() {
       let newnumb =  newNumbers();

@@ -20,7 +20,7 @@ function NumberSquare({number, plain, fadein, movedirection, movespeed}){
     
     if(movedirection === 'null' || movedirection === undefined){
     }else{
-        console.log('we making this move ', movedirection, movespeed);
+        // console.log('we making this move ', movedirection, movespeed);
         numberclass += ' move-' + movedirection + '-' +  movespeed;
     }
 

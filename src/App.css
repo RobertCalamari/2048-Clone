@@ -35,6 +35,7 @@
   flex-wrap: wrap;
   padding: 9px;
   gap: 10px;
+  touch-action: none;
 }
 
 .number-square{
@@ -46,6 +47,7 @@
   justify-content: center;
   align-items: center;
   font-size: 44px;
+  touch-action: none;
 }
 
 .color-one{
@@ -101,6 +103,7 @@
   justify-content: center;
   align-items: center;
   font-size: 44px;
+  touch-action: none;
 }
 
 .visible{
@@ -138,6 +141,29 @@
 .main-button:hover{
 	background-color: #7c7c7c;
   cursor: pointer;
+}
+
+.gameover{
+  width: 100%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+
+  animation-duration: 1s;
+  transition-timing-function:ease-in-out;
+  animation-fill-mode: both;
+  animation-name: fadeIn;
+}
+
+.gameover-button{
+  width: 58%;
+  height: auto;
+  aspect-ratio: 1;
+  opacity: 0.8;
+  max-width: 100px;
 }
 
 .fade-in{

@@ -8,6 +8,7 @@ function App() {
   const [squares, setSquares] = useState([]);
   const [clickedKey, setClickedKey] = useState(false);
   const [waitClick, setWaitClick] = useState(false);
+  const [gameOverScreen, setGameOverScreen] = useState(false);
   const [newNumber, setNewNumber] = useState(20);
   const [squaresNotUsed, setSquaresNotUsed] = useState([]);
   const [squaresMovement, setSquaresMovement] = useState([]);
@@ -16,26 +17,20 @@ function App() {
   useEffect(() => {
 
 
-    let locationAndNumber = getNumbers(true);
-    let locationAndNumber2 = getNumbers(true);
-    while(locationAndNumber[0] === locationAndNumber2[0]){
-      locationAndNumber2 = getNumbers(true);
-    }
-    let begArr = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-    let usedArr = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15];
-    setSquaresMovement([['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],]);
-    // let begArr = [2,0,0,2,2,0,0,2,2,0,0,0,2,0,0,4];
-    // let usedArr = [1,2,5,6,9,10,11,13,14];
-    begArr[locationAndNumber[0]] = locationAndNumber[1];
-    begArr[locationAndNumber2[0]] = locationAndNumber2[1];
-    usedArr = removeFromArray(usedArr, locationAndNumber[0]);
-    usedArr = removeFromArray(usedArr, locationAndNumber2[0]);
-    
-
-    setSquares(begArr);
-    setSquaresNotUsed(usedArr);
+    newGame();
 
     document.addEventListener('keydown', detectKeyDown2, true);
+    swipedetect(document, function(swipedir){
+      if (swipedir ==='left'){
+        detectSwipe('ArrowLeft');
+      }else if (swipedir ==='right'){
+        detectSwipe('ArrowRight');
+      }else if (swipedir ==='up'){
+        detectSwipe('ArrowUp');
+      }else if (swipedir ==='down'){
+        detectSwipe('ArrowDown');
+      }
+    });
     
   }, []);
 
@@ -45,6 +40,58 @@ function App() {
       e.preventDefault();
     }
   }
+
+  function detectSwipe(dir){
+    setClickedKey(dir);
+  }
+
+  function swipedetect(el, callback){
+  
+    var touchsurface = el,
+    swipedir,
+    startX,
+    startY,
+    distX,
+    distY,
+    dist,
+    threshold = 50, //required min distance traveled to be considered swipe
+    restraint = 100, // maximum distance allowed at the same time in perpendicular direction
+    allowedTime = 800, // maximum time allowed to travel that distance
+    elapsedTime,
+    startTime,
+    handleswipe = callback || function(swipedir){}
+  
+    touchsurface.addEventListener('touchstart', function(e){
+        var touchobj = e.changedTouches[0]
+        swipedir = 'none'
+        dist = 0
+        startX = touchobj.pageX
+        startY = touchobj.pageY
+        startTime = new Date().getTime() // record time when finger first makes contact with surface
+        e.preventDefault()
+    }, false)
+  
+    touchsurface.addEventListener('touchmove', function(e){
+        e.preventDefault() // prevent scrolling when inside DIV
+    }, false)
+  
+    touchsurface.addEventListener('touchend', function(e){
+        var touchobj = e.changedTouches[0]
+        distX = touchobj.pageX - startX // get horizontal dist traveled by finger while in contact with surface
+        distY = touchobj.pageY - startY // get vertical dist traveled by finger while in contact with surface
+        elapsedTime = new Date().getTime() - startTime // get time elapsed
+        if (elapsedTime <= allowedTime){ // first condition for awipe met
+            if (Math.abs(distX) >= threshold && Math.abs(distY) <= restraint){ // 2nd condition for horizontal swipe met
+                swipedir = (distX < 0)? 'left' : 'right' // if dist traveled is negative, it indicates left swipe
+            }
+            else if (Math.abs(distY) >= threshold && Math.abs(distX) <= restraint){ // 2nd condition for vertical swipe met
+                swipedir = (distY < 0)? 'up' : 'down' // if dist traveled is negative, it indicates up swipe
+            }
+        }
+        handleswipe(swipedir)
+        e.preventDefault()
+    }, false)
+}
 
   useEffect(() => {
     if (isMount) {
@@ -68,10 +115,28 @@ function App() {
       
   }, [clickedKey]);
 
-
-  const detectKeyDown = (e) => {
+  function newGame(){
+    setNewNumber(20);
+    let locationAndNumber = getNumbers(true);
+    let locationAndNumber2 = getNumbers(true);
+    while(locationAndNumber[0] === locationAndNumber2[0]){
+      locationAndNumber2 = getNumbers(true);
+    }
+    let begArr = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+    let usedArr = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15];
+    setSquaresMovement([['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],]);
+    // let begArr = [2,0,0,2,2,0,0,2,2,0,0,0,2,0,0,4];
+    // let usedArr = [1,2,5,6,9,10,11,13,14];
+    begArr[locationAndNumber[0]] = locationAndNumber[1];
+    begArr[locationAndNumber2[0]] = locationAndNumber2[1];
+    usedArr = removeFromArray(usedArr, locationAndNumber[0]);
+    usedArr = removeFromArray(usedArr, locationAndNumber2[0]);
     
-    // console.log("Clicked Key: ", e.key);
+
+    setSquares(begArr);
+    setSquaresNotUsed(usedArr);
+    setGameOverScreen(false);
+
   }
 
   function moveUp(){
@@ -542,7 +607,7 @@ function App() {
       let tempUsedArr = [];    
       setSquaresMovement([['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],['null', 'null'],]);
       let tempSquareMovArr = [];
-
+ 
       for(let i in squaresMovement){
         tempSquareMovArr[i] = squaresMovement[i];
       }
@@ -678,6 +743,7 @@ function App() {
           gameOver();
         }
       }else{
+
         moveSquares(tempSquareMovArr, temparr);
       } 
 
@@ -687,13 +753,51 @@ function App() {
   }
 
   function gameOver(){
-    console.log('<div style="font-size:50px;">GAME OVER!</div>')
+    let notOverYet = false;
+    for(let i in squares){
+      console.log(i, squares[i]);
+      i = parseInt(i);
+      if(i === 0 || i === 1 || i === 2 || i === 3){
+
+      }else{
+        if(squares[i] === squares[i-4]){
+          notOverYet = true;
+        }
+      }
+      if(i === 12 || i === 13 || i === 14 || i === 15){
+
+      }else{
+        if(squares[i] === squares[i+4]){
+          notOverYet = true;
+        }
+      }
+      if(i === 0 || i === 4 || i === 8 || i === 12){
+
+      }else{
+        if(squares[i] === squares[i-1]){
+          notOverYet = true;
+        }
+      }
+      if(i === 3 || i === 7 || i === 11 || i === 15){
+
+      }else{
+        if(squares[i] === squares[i+1]){
+          notOverYet = true;
+        }
+      }
+    }
+    if(notOverYet){
+
+    }else{
+      setGameOverScreen(true);
+    }
   }
 
 
   function moveSquares(tempSquareMovArr, temparr){
     
     setWaitClick(true);
+    setGameOverScreen(false);
     setTimeout(function() {
       setWaitClick(false);
     }
@@ -766,6 +870,9 @@ function App() {
             }) 
           }
         </div>
+        <div className='gameover' style={gameOverScreen === true ? {display:'flex'} : {display:'none'}}>
+          <div className='main-button gameover-button' onClick={() => newGame()} > Play Again? </div>
+        </div>
 
       </div>
       
@@ -784,6 +891,8 @@ function App() {
           <div className='main-button' onClick={() => moveRight()} >  	<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h13M12 5l7 7-7 7"/></svg> </div>
         </div>
       </div>
+
+      
 
       
 

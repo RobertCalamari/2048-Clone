@@ -24,8 +24,10 @@
 
 .board{
   background-color: #705a40;
-  width: 94%;
+  width: 90vw;
+  height: 90vw;
   max-width: 543px;
+  max-height: 543px;
   aspect-ratio: 1;
   margin: 10px 0 10px 0;
   border-radius: 10px;
@@ -38,16 +40,25 @@
   touch-action: none;
 }
 
-.number-square{
-  background-color: rgb(80, 103, 138);
-  flex-basis: 23%;
+.square{
   border-radius: 10px;
-  aspect-ratio: 1;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 44px;
   touch-action: none;
+  max-width: 125px;
+  max-height: 125px;
+  width: 20vw;
+  height: 20vw;
+}
+
+.number-square{
+  background-color: rgb(80, 103, 138);
+}
+
+.plain-square{
+  background-color: rgb(165, 130, 98);
 }
 
 .color-one{
@@ -92,18 +103,6 @@
 
 .color-eleven{
   background-color: rgb(156, 136, 212);
-}
-
-.plain-square{
-  background-color: rgb(165, 130, 98);
-  flex-basis: 23%;
-  border-radius: 10px;
-  aspect-ratio: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 44px;
-  touch-action: none;
 }
 
 .visible{
@@ -394,15 +393,8 @@
 
 
  @media only screen and (max-width: 550px) {
- 
-  .board{
-    padding: 5px;
-    gap: 5px;
-  }
-  
   .number-square{
-    flex-basis: 23%;
-    font-size: 23px;
+    font-size: 28px;
   }
 
  }

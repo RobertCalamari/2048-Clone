@@ -840,7 +840,7 @@ function App() {
     let num1 = Math.floor(Math.random() * 10)+1;
     let location1 = 0;
     isStart ? location1 = Math.floor(Math.random() * 16) : location1 = squaresNotUsed[Math.floor(Math.random() * squaresNotUsed.length)];
-    num1 > 7 ? num1 = 4 : num1 = 2;
+    num1 > 8 ? num1 = 4 : num1 = 2;
     return([location1, num1]);
   }
 
